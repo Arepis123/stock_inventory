@@ -24,54 +24,71 @@ class StockDistribution extends Component
 
     public function mount()
     {
-        $this->distribution_date = now()->format('Y-m-d');
+        try {
+            $this->distribution_date = now()->format('Y-m-d');
 
-        // Verify access via QR code scan
-        $qrScanId = session('current_qr_scan_id');
-        if (!$qrScanId) {
-            // No valid QR scan session - redirect to home
-            session()->flash('error', 'Access denied. Please scan a QR code to access the distribution form.');
+            // Verify access via QR code scan
+            $qrScanId = session('current_qr_scan_id');
+            if (!$qrScanId) {
+                // No valid QR scan session - redirect to home
+                session()->flash('error', 'Access denied. Please scan a QR code to access the distribution form.');
+                return redirect()->route('home');
+            }
+
+            // Verify the QR scan is still valid
+            $qrScan = \App\Models\QrScan::find($qrScanId);
+            if (!$qrScan || !$qrScan->scanned_at || $qrScan->completed_distribution) {
+                session()->forget('current_qr_scan_id');
+                session()->flash('error', 'Invalid or expired access. Please scan a QR code again.');
+                return redirect()->route('home');
+            }
+
+            $this->scanned = true; // Mark as scanned since they accessed via QR code
+        } catch (\Exception $e) {
+            session()->flash('error', 'An error occurred while loading the page. Please try scanning the QR code again.');
             return redirect()->route('home');
         }
-
-        // Verify the QR scan is still valid
-        $qrScan = \App\Models\QrScan::find($qrScanId);
-        if (!$qrScan || !$qrScan->scanned_at || $qrScan->completed_distribution) {
-            session()->forget('current_qr_scan_id');
-            session()->flash('error', 'Invalid or expired access. Please scan a QR code again.');
-            return redirect()->route('home');
-        }
-
-        $this->scanned = true; // Mark as scanned since they accessed via QR code
     }
 
     public function getStaffNamesProperty()
     {
-        return Staff::where('is_active', true)
-            ->orderBy('name')
-            ->pluck('name')
-            ->toArray();
+        try {
+            return Staff::where('is_active', true)
+                ->orderBy('name')
+                ->pluck('name')
+                ->toArray();
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     public function getRegionsProperty()
     {
-        return Region::where('is_active', true)->get();
+        try {
+            return Region::where('is_active', true)->get();
+        } catch (\Exception $e) {
+            return collect();
+        }
     }
 
     public function getAvailableWarehousesProperty()
     {
-        if (!$this->region) {
-            return [];
-        }
+        try {
+            if (!$this->region) {
+                return collect();
+            }
 
-        $selectedRegion = Region::where('code', $this->region)->first();
-        if (!$selectedRegion) {
-            return [];
-        }
+            $selectedRegion = Region::where('code', $this->region)->first();
+            if (!$selectedRegion) {
+                return collect();
+            }
 
-        return Warehouse::where('region_id', $selectedRegion->id)
-            ->where('is_active', true)
-            ->get();
+            return Warehouse::where('region_id', $selectedRegion->id)
+                ->where('is_active', true)
+                ->get();
+        } catch (\Exception $e) {
+            return collect();
+        }
     }
 
     public function updatedRegion()

@@ -37,7 +37,9 @@
                     <flux:select wire:model.live="region" id="region" placeholder="Select region..."
                              class="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100">
                         @foreach($this->regions as $regionObj)
-                            <flux:select.option value="{{ $regionObj->code }}">{{ $regionObj->name }}</flux:select.option>
+                            @if($regionObj && $regionObj->name && $regionObj->code)
+                                <flux:select.option value="{{ $regionObj->code }}">{{ $regionObj->name }}</flux:select.option>
+                            @endif
                         @endforeach
                     </flux:select>
                     <flux:error name="region" />
@@ -49,7 +51,9 @@
                     <flux:select wire:model="warehouse" id="warehouse" placeholder="Select warehouse..." :disabled="!$region"
                              class="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100 disabled:bg-gray-100 dark:disabled:bg-zinc-700">
                         @foreach($this->availableWarehouses as $warehouseObj)
-                            <flux:select.option value="{{ $warehouseObj->name }}">{{ $warehouseObj->name }}</flux:select.option>
+                            @if($warehouseObj && $warehouseObj->name)
+                                <flux:select.option value="{{ $warehouseObj->name }}">{{ $warehouseObj->name }}</flux:select.option>
+                            @endif
                         @endforeach
                     </flux:select>
                     <flux:error name="warehouse" />

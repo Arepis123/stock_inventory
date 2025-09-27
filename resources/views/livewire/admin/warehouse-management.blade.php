@@ -24,7 +24,11 @@
                         <tr class="border-b border-zinc-100 dark:border-zinc-800">
                             <td class="py-3 px-4">{{ $warehouse->name }}</td>
                             <td class="py-3 px-4">
-                                <flux:badge size="sm" color="blue">{{ $warehouse->region->name }}</flux:badge>
+                                @if($warehouse->region)
+                                    <flux:badge size="sm" color="blue">{{ $warehouse->region->name }}</flux:badge>
+                                @else
+                                    <flux:badge size="sm" color="red">No Region</flux:badge>
+                                @endif
                             </td>
                             <td class="py-3 px-4">
                                 @if($warehouse->is_active)
