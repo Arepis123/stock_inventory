@@ -67,6 +67,62 @@
         @endif
     </flux:card>
 
+    <!-- Stock History -->
+    <flux:card class="mt-6">
+        <div class="mb-6">
+            <flux:heading size="lg">Stock History</flux:heading>
+            <flux:subheading>Recent stock adjustments by administrators</flux:subheading>
+        </div>
+
+        @if(count($stockHistory) > 0)
+            <div class="space-y-3">
+                @foreach($stockHistory as $history)
+                    <div class="border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 bg-zinc-50 dark:bg-zinc-800/50">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <flux:badge
+                                        size="sm"
+                                        color="{{ $history->action_type === 'add' ? 'green' : 'red' }}"
+                                    >
+                                        {{ $history->action_display }}
+                                    </flux:badge>
+                                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        {{ $history->quantity_display }} sets
+                                    </span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                                        by {{ $history->admin_name }}
+                                    </span>
+                                </div>
+
+                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                    Stock: {{ number_format($history->total_stock_before) }} → {{ number_format($history->total_stock_after) }}
+                                </div>
+
+                                @if($history->notes)
+                                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        {{ $history->notes }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="text-right text-xs text-gray-500 dark:text-gray-400">
+                                <div>{{ $history->created_at->format('M d, Y') }}</div>
+                                <div>{{ $history->created_at->format('h:i A') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-8">
+                <flux:icon.clock class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-gray-100">No history available</h3>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Stock adjustments will appear here once recorded.</p>
+            </div>
+        @endif
+    </flux:card>
+
     <!-- Modal -->
     <flux:modal wire:model="showModal" name="stock-modal">
         <form wire:submit="save" class="space-y-6">

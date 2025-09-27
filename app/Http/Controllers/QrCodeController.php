@@ -12,8 +12,11 @@ class QrCodeController extends Controller
     public function generateDistributionQr()
     {
         // Get the current active QR token
-        $latestQr = QrScan::whereNull('scanned_at')
-            ->where('is_active', true)
+        $latestQr = QrScan::where('is_active', true)
+            ->where(function($query) {
+                $query->whereNull('expires_at')
+                      ->orWhere('expires_at', '>', now());
+            })
             ->orderBy('created_at', 'desc')
             ->first();
 

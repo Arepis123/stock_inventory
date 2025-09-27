@@ -23,7 +23,11 @@ class QrCodeManagement extends Component
 
     public function loadCurrentQrToken()
     {
-        $latestQr = QrScan::whereNull('scanned_at')
+        $latestQr = QrScan::where('is_active', true)
+            ->where(function($query) {
+                $query->whereNull('expires_at')
+                      ->orWhere('expires_at', '>', now());
+            })
             ->orderBy('created_at', 'desc')
             ->first();
 
@@ -33,8 +37,8 @@ class QrCodeManagement extends Component
 
     public function generateNewQrCode()
     {
-        // Disable old unused QR codes
-        QrScan::whereNull('scanned_at')->delete();
+        // Disable old active QR codes
+        QrScan::where('is_active', true)->update(['is_active' => false]);
 
         // Generate new QR code
         $token = Str::random(32);
@@ -42,7 +46,7 @@ class QrCodeManagement extends Component
         QrScan::create([
             'token' => $token,
             'is_active' => true,
-            'expires_at' => null, // No expiration - valid until admin regenerates
+            'expires_at' => now()->addMonth(), // Valid for 1 month
             'max_attempts' => 3, // Allow 3 failed attempts before blocking
             'scan_metadata' => [
                 'generated_at' => now()->toISOString(),

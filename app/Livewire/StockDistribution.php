@@ -37,7 +37,7 @@ class StockDistribution extends Component
 
             // Verify the QR scan is still valid
             $qrScan = \App\Models\QrScan::find($qrScanId);
-            if (!$qrScan || !$qrScan->scanned_at || $qrScan->completed_distribution) {
+            if (!$qrScan || !$qrScan->scanned_at || $qrScan->isExpired()) {
                 session()->forget('current_qr_scan_id');
                 session()->flash('error', 'Invalid or expired access. Please scan a QR code again.');
                 return redirect()->route('home');
@@ -90,6 +90,7 @@ class StockDistribution extends Component
             return collect();
         }
     }
+
 
     public function updatedRegion()
     {
@@ -154,17 +155,28 @@ class StockDistribution extends Component
             $stockManagement->updateAvailableStock();
             $stockManagement->save();
 
-            // Link with QR scan if accessed via QR code
+            // Link with QR scan if accessed via QR code (but keep QR active for reuse)
             $qrScanId = session('current_qr_scan_id');
             if ($qrScanId) {
                 $qrScan = \App\Models\QrScan::find($qrScanId);
                 if ($qrScan) {
-                    $qrScan->update([
-                        'completed_distribution' => true,
+                    // Record this distribution but don't mark as completed
+                    $distributions = $qrScan->scan_metadata['distributions'] ?? [];
+                    $distributions[] = [
                         'distribution_id' => $stockInventory->id,
+                        'timestamp' => now()->toISOString(),
+                        'staff_name' => $this->staff_name,
+                        'quantity' => $this->quantity,
+                    ];
+
+                    $qrScan->update([
+                        'scan_metadata' => array_merge($qrScan->scan_metadata ?? [], [
+                            'distributions' => $distributions,
+                            'total_distributions' => count($distributions),
+                        ]),
                     ]);
                 }
-                session()->forget('current_qr_scan_id');
+                // Don't forget the session - keep it active for more distributions
             }
 
             $quantity = $this->quantity;
@@ -185,6 +197,6 @@ class StockDistribution extends Component
     public function render()
     {
         return view('livewire.stock-distribution')
-            ->layout('components.layouts.app');
+            ->layout('components.layouts.guest');
     }
 }

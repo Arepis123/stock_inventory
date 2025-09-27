@@ -11,9 +11,7 @@
             <flux:heading size="lg" class="text-gray-900 dark:text-gray-100">Current Active QR Code</flux:heading>
             <div class="flex space-x-2">
                 @if($currentQrToken)
-                    <flux:button wire:click="toggleQrDisplay" variant="filled"
-                             class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-800">
-                        <flux:icon.eye class="w-4 h-4 mr-2" />
+                    <flux:button wire:click="toggleQrDisplay" variant="filled">                       
                         Show QR Code
                     </flux:button>
                     <flux:button wire:click="toggleQrActivation" variant="{{ $currentQrActive ? 'danger' : 'primary' }}">

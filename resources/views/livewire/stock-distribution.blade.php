@@ -1,27 +1,29 @@
-<flux:main class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
     @if($scanned)
-        <flux:card class="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20">
-            <div class="flex items-center">
-                <flux:icon.check-circle class="w-5 h-5 text-green-600 dark:text-green-400 mr-3" />
-                <div>
-                    <flux:heading size="sm" class="text-green-800 dark:text-green-200">QR Code Scanned Successfully</flux:heading>
-                    <flux:subheading class="text-green-700 dark:text-green-300">You can now proceed with the stock distribution.</flux:subheading>
-                </div>
+        <div x-data="{ visible: true }" x-show="visible" x-collapse>
+            <div x-show="visible" x-transition>        
+                <flux:callout icon="check-badge" variant="success">
+                    <flux:callout.heading >QR Code Scanned Successfully</flux:callout.heading>
+                    <flux:callout.text>You can now proceed with the stock distribution.</flux:callout.text>
+                    <x-slot name="controls">
+                        <flux:button icon="x-mark" variant="ghost" x-on:click="visible = false" />
+                    </x-slot>
+                </flux:callout>        
             </div>
-        </flux:card>
+        </div>                
     @endif
 
     <flux:card class="bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-700">
-        <div class="mb-6">
-            <flux:heading size="xl" class="text-gray-900 dark:text-gray-100">Stock Distribution Form</flux:heading>
+        <div class="mb-4 sm:mb-6">
+            <flux:heading size="lg" variant="strong" class="text-gray-900 dark:text-gray-100">Stock Distribution Form</flux:heading>
             <flux:subheading class="text-gray-600 dark:text-gray-400">Record the distribution of helmet & shirt sets to staff members.</flux:subheading>
         </div>
 
-        <form wire:submit="submit" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <form wire:submit="submit" class="space-y-4 sm:space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <!-- Staff Name -->
                 <flux:field>
-                    <flux:label for="staff_name" class="text-gray-900 dark:text-gray-100">Staff Name *</flux:label>
+                    <flux:label for="staff_name" class="text-gray-900 dark:text-gray-100">Staff Name<span class="mx-1 text-red-600">*</span></flux:label>
                     <flux:select wire:model.live="staff_name" id="staff_name" placeholder="Select staff member..."
                              class="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100">
                         @foreach($this->staffNames as $name)
@@ -33,7 +35,7 @@
 
                 <!-- Region -->
                 <flux:field>
-                    <flux:label for="region" class="text-gray-900 dark:text-gray-100">Region *</flux:label>
+                    <flux:label for="region" class="text-gray-900 dark:text-gray-100">Region<span class="mx-1 text-red-600">*</span></flux:label>
                     <flux:select wire:model.live="region" id="region" placeholder="Select region..."
                              class="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100">
                         @foreach($this->regions as $regionObj)
@@ -47,7 +49,7 @@
 
                 <!-- Warehouse -->
                 <flux:field>
-                    <flux:label for="warehouse" class="text-gray-900 dark:text-gray-100">Warehouse *</flux:label>
+                    <flux:label for="warehouse" class="text-gray-900 dark:text-gray-100">Warehouse<span class="mx-1 text-red-600">*</span></flux:label>
                     <flux:select wire:model="warehouse" id="warehouse" placeholder="Select warehouse..." :disabled="!$region"
                              class="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100 disabled:bg-gray-100 dark:disabled:bg-zinc-700">
                         @foreach($this->availableWarehouses as $warehouseObj)
@@ -61,7 +63,7 @@
 
                 <!-- Distribution Date -->
                 <flux:field>
-                    <flux:label for="distribution_date" class="text-gray-900 dark:text-gray-100">Distribution Date *</flux:label>
+                    <flux:label for="distribution_date" class="text-gray-900 dark:text-gray-100">Distribution Date<span class="mx-1 text-red-600">*</span></flux:label>
                     <flux:input type="date" wire:model="distribution_date" id="distribution_date"
                             class="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100" />
                     <flux:error name="distribution_date" />
@@ -69,7 +71,7 @@
 
                 <!-- For Use Stock -->
                 <flux:field>
-                    <flux:label for="for_use_stock" class="text-gray-900 dark:text-gray-100">For Use Stock</flux:label>
+                    <flux:label for="for_use_stock" class="text-gray-900 dark:text-gray-100">For Contractor Use</flux:label>
                     <flux:input type="number" wire:model.live="for_use_stock" id="for_use_stock" min="0" placeholder="0"
                             class="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400" />
                     <flux:description class="text-gray-600 dark:text-gray-400">Number of sets for immediate use</flux:description>
@@ -105,17 +107,15 @@
             </flux:field>
 
             <!-- Submit Button -->
-            <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200 dark:border-zinc-700">
+            <div class="flex justify-end space-x-3 sm:space-x-4 pt-3 sm:pt-4 border-t border-gray-200 dark:border-zinc-700">
                 <flux:button type="button" variant="ghost" onclick="history.back()"
                          class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-zinc-800">
                     Cancel
                 </flux:button>
-                <flux:button type="submit" variant="primary"
-                         class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white">
-                    <flux:icon.plus class="w-4 h-4 mr-2" />
+                <flux:button type="submit" variant="primary">
                     Record Distribution
                 </flux:button>
             </div>
         </form>
     </flux:card>
-</flux:main>
+</div>

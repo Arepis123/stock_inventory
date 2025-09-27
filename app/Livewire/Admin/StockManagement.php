@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\StockManagement as StockModel;
+use App\Models\StockHistory;
 use Livewire\Component;
 use Flux\Flux;
 
@@ -33,6 +34,7 @@ class StockManagement extends Component
         ]);
 
         $stock = StockModel::getHelmetShirtSetStock();
+        $stockBefore = $stock->total_stock;
 
         if ($this->action_type === 'add') {
             $stock->total_stock += (int)$this->quantity;
@@ -49,6 +51,16 @@ class StockManagement extends Component
         $stock->updateAvailableStock();
         $stock->notes = $this->notes ?: null;
         $stock->save();
+
+        // Record history
+        StockHistory::create([
+            'action_type' => $this->action_type,
+            'quantity' => (int)$this->quantity,
+            'total_stock_before' => $stockBefore,
+            'total_stock_after' => $stock->total_stock,
+            'notes' => $this->notes,
+            'admin_name' => auth()->user()->name ?? 'System',
+        ]);
 
         Flux::toast($message);
         $this->closeModal();
@@ -70,9 +82,11 @@ class StockManagement extends Component
     public function render()
     {
         $stock = StockModel::getHelmetShirtSetStock();
+        $stockHistory = StockHistory::orderBy('created_at', 'desc')->limit(20)->get();
 
         return view('livewire.admin.stock-management', [
-            'stock' => $stock
+            'stock' => $stock,
+            'stockHistory' => $stockHistory
         ]);
     }
 }
