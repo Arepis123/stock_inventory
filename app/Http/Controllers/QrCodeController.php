@@ -41,7 +41,7 @@ class QrCodeController extends Controller
             return redirect()->route('home')->with('error', 'Invalid QR code.');
         }
 
-        // Check if QR code can be used (excludes expiration check)
+        // Check if QR code can be used
         if (!$qrScan->canBeUsed()) {
             $reason = 'Invalid attempt';
 
@@ -49,8 +49,6 @@ class QrCodeController extends Controller
                 $reason = 'QR code deactivated';
             } elseif ($qrScan->isExhausted()) {
                 $reason = 'Too many attempts';
-            } elseif ($qrScan->scanned_at) {
-                $reason = 'Already used';
             }
 
             // Record failed attempt
@@ -65,14 +63,25 @@ class QrCodeController extends Controller
             return redirect()->route('home')->with('error', 'Automated access detected. Please use a regular browser.');
         }
 
-        // Record the scan
+        // Record the scan (update latest scan info and add to scan history)
+        $scanHistory = $qrScan->scan_metadata['scan_history'] ?? [];
+        $scanHistory[] = [
+            'scanned_at' => now()->toISOString(),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'scanned_from_url' => $request->fullUrl(),
+            'referrer' => $request->header('referer'),
+        ];
+
         $qrScan->update([
-            'scanned_at' => now(),
+            'scanned_at' => now(), // Keep this for latest scan time
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'scan_metadata' => array_merge($qrScan->scan_metadata ?? [], [
-                'scanned_from_url' => $request->fullUrl(),
-                'referrer' => $request->header('referer'),
+                'scan_history' => $scanHistory,
+                'total_scans' => count($scanHistory),
+                'last_scan_url' => $request->fullUrl(),
+                'last_scan_referrer' => $request->header('referer'),
             ]),
         ]);
 
@@ -141,7 +150,6 @@ class QrCodeController extends Controller
         return match($reason) {
             'QR code deactivated' => 'This QR code has been deactivated by the administrator.',
             'Too many attempts' => 'This QR code has been blocked due to too many failed attempts.',
-            'Already used' => 'This QR code has already been used.',
             default => 'Invalid QR code or access denied.',
         };
     }

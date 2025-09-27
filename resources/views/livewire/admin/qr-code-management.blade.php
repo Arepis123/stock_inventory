@@ -78,8 +78,8 @@
                     <flux:table.columns>
                         <flux:table.column>Token</flux:table.column>
                         <flux:table.column>Active</flux:table.column>
-                        <flux:table.column>Status</flux:table.column>
-                        <flux:table.column>Scanned At</flux:table.column>
+                        <flux:table.column>Scan Count</flux:table.column>
+                        <flux:table.column>Last Scanned</flux:table.column>
                         <flux:table.column>Device Info</flux:table.column>
                         <flux:table.column>IP Address</flux:table.column>
                         <flux:table.column>Distribution</flux:table.column>
@@ -106,20 +106,15 @@
                                     @endif
                                 </flux:table.cell>
                                 <flux:table.cell>
-                                    @if($qrScan->status === 'Completed')
-                                        <flux:badge color="green" size="sm">
-                                            <flux:icon.check-circle class="w-3 h-3 mr-1" />
-                                            Completed
-                                        </flux:badge>
-                                    @elseif($qrScan->status === 'Scanned')
-                                        <flux:badge color="yellow" size="sm">
-                                            <flux:icon.clock class="w-3 h-3 mr-1" />
-                                            Scanned
+                                    @if($qrScan->total_scans > 0)
+                                        <flux:badge color="blue" size="sm">
+                                            <flux:icon.eye class="w-3 h-3 mr-1" />
+                                            {{ $qrScan->total_scans }} scan{{ $qrScan->total_scans > 1 ? 's' : '' }}
                                         </flux:badge>
                                     @else
                                         <flux:badge color="gray" size="sm">
                                             <flux:icon.minus-circle class="w-3 h-3 mr-1" />
-                                            Pending
+                                            Not scanned
                                         </flux:badge>
                                     @endif
                                 </flux:table.cell>
@@ -167,4 +162,37 @@
             </div>
         @endif
     </flux:card>
+
+    <!-- QR Code Modal -->
+    <flux:modal name="qr-code-modal" wire:model="showQrCode" class="md:w-96">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">QR Code for Distribution Access</flux:heading>
+                <flux:text class="mt-2">Share this QR code with staff to access the stock distribution form</flux:text>
+            </div>
+
+            @if($currentQrToken)
+                <div class="text-center space-y-4">
+                    <div class="flex justify-center">
+                        <img src="{{ route('qr.generate') }}" alt="QR Code" class="border border-gray-200 dark:border-zinc-700 rounded-lg bg-white p-4">
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mt-3">
+                        <p class="font-medium">Token: <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs">{{ $currentQrToken }}</code></p>
+                    </div>
+                </div>
+            @else
+                <div class="text-center py-8">
+                    <flux:icon.exclamation-triangle class="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                    <p class="text-gray-600 dark:text-gray-400">No active QR code available</p>
+                </div>
+            @endif
+
+            <div class="flex">
+                <flux:spacer />
+                <flux:button wire:click="toggleQrDisplay" variant="primary">
+                    Close
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
 </div>

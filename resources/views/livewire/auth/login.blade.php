@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+    <x-auth-header :title="__('SKKP Inventory')" :description="__('Safety helmet and T-shirt distribution')" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />

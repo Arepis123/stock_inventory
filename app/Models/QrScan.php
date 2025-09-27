@@ -92,8 +92,12 @@ class QrScan extends Model
     public function canBeUsed(): bool
     {
         return $this->is_active
-            && !$this->isExhausted()
-            && !$this->scanned_at;
+            && !$this->isExhausted();
+    }
+
+    public function getTotalScansAttribute(): int
+    {
+        return $this->scan_metadata['total_scans'] ?? ($this->scanned_at ? 1 : 0);
     }
 
     public function recordFailedAttempt(string $ip, string $userAgent, string $reason = 'Invalid attempt'): void
