@@ -1,49 +1,65 @@
-<div class="max-w-6xl mx-auto p-6">
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white dark:text-white">Staff Management</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">Manage staff members and their status</p>
+    </div>
     <flux:card class="space-y-6">
         <div class="flex justify-between items-center">
             <div>
                 <flux:heading size="lg">Staff Management</flux:heading>
                 <flux:subheading>Manage staff members and their status</flux:subheading>
             </div>
-            <flux:button wire:click="create" variant="primary" icon="plus">Add Staff</flux:button>
+            <flux:button wire:click="create" size="sm" variant="primary" icon="plus">Add Staff</flux:button>
         </div>
 
         <!-- Staff Table -->
         <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-zinc-200 dark:border-zinc-700">
-                        <th class="text-left py-3 px-4 font-medium text-zinc-900 dark:text-zinc-100">Name</th>
-                        <th class="text-left py-3 px-4 font-medium text-zinc-900 dark:text-zinc-100">Status</th>
-                        <th class="text-left py-3 px-4 font-medium text-zinc-900 dark:text-zinc-100">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($staff as $staffMember)
-                        <tr class="border-b border-zinc-100 dark:border-zinc-800">
-                            <td class="py-3 px-4">{{ $staffMember->name }}</td>
-                            <td class="py-3 px-4">
+            <flux:table>
+                <flux:table.columns>
+                    <flux:table.column>Name</flux:table.column>
+                    <flux:table.column align="center">Status</flux:table.column>
+                    <flux:table.column align="center">Actions</flux:table.column>
+                </flux:table.columns>
+
+                <flux:table.rows>
+                    @forelse($staff as $staffMember)
+                        <flux:table.row>
+                            <flux:table.cell>
+                                <div class="font-medium">{{ $staffMember->name }}</div>
+                            </flux:table.cell>
+                            <flux:table.cell align="center">
                                 @if($staffMember->is_active)
                                     <flux:badge size="sm" color="green">Active</flux:badge>
                                 @else
                                     <flux:badge size="sm" color="red">Inactive</flux:badge>
                                 @endif
-                            </td>
-                            <td class="py-3 px-4">
-                                <div class="flex space-x-2">
+                            </flux:table.cell>
+                            <flux:table.cell align="center">
+                                <div class="flex justify-center space-x-0">
                                     <flux:button size="sm" variant="subtle" wire:click="edit({{ $staffMember->id }})" icon="pencil">Edit</flux:button>
-                                    <flux:button size="sm" variant="danger" wire:click="delete({{ $staffMember->id }})" icon="trash" wire:confirm="Are you sure you want to delete this staff member?">Delete</flux:button>
+                                    <flux:button size="sm" variant="subtle" wire:click="delete({{ $staffMember->id }})" icon="trash" wire:confirm="Are you sure you want to delete this staff member?">Delete</flux:button>
                                 </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @empty
+                        <flux:table.row>
+                            <flux:table.cell colspan="3" class="text-center py-8">
+                                <div class="text-gray-500 dark:text-gray-400">
+                                    <flux:icon.users class="w-8 h-8 mx-auto mb-1 opacity-50" />
+                                    <p class="font-medium">No staff members found</p>
+                                    <p class="text-sm">Create your first staff member to get started.</p>
+                                </div>
+                            </flux:table.cell>
+                        </flux:table.row>
+                    @endforelse
+                </flux:table.rows>
+            </flux:table>
         </div>
     </flux:card>
 
     <!-- Modal -->
-    <flux:modal wire:model="showModal" name="staff-modal">
+    <flux:modal wire:model="showModal" name="staff-modal" class="md:w-96">
         <form wire:submit="save" class="space-y-6">
             <div>
                 <flux:heading size="lg">{{ $editingStaff ? 'Edit' : 'Create' }} Staff</flux:heading>
@@ -56,8 +72,9 @@
                     <flux:error name="name" />
                 </flux:field>
 
-                <flux:field>
-                    <flux:checkbox wire:model="is_active">Active</flux:checkbox>
+                <flux:field variant="inline">
+                    <flux:checkbox wire:model="is_active" checked/>
+                    <flux:label>Active</flux:label>
                     <flux:error name="is_active" />
                 </flux:field>
             </div>

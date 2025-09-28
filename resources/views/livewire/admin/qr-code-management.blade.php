@@ -6,26 +6,30 @@
     </div>
 
     <!-- Current QR Code Section -->
-    <flux:card class="bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-700">
+    <flux:card >
         <div class="flex justify-between items-center mb-6">
-            <flux:heading size="lg" class="text-gray-900 dark:text-gray-100">Current Active QR Code</flux:heading>
-            <div class="flex space-x-2">
-                @if($currentQrToken)
-                    <flux:button wire:click="toggleQrDisplay" variant="filled">                       
-                        Show QR Code
-                    </flux:button>
-                    <flux:button wire:click="toggleQrActivation" variant="{{ $currentQrActive ? 'danger' : 'primary' }}">
+            <flux:heading size="lg" class="text-gray-900 dark:text-gray-100">Current Active QR Code</flux:heading>            
+            <flux:dropdown>
+                <flux:button icon="ellipsis-horizontal" size="sm"/>
+                <flux:menu>
+                    <flux:menu.item wire:click="generateNewQrCode">Generate New QR Code</flux:menu.item>                    
+                    @if($currentQrToken)
+                        <flux:menu.separator />
+                        <flux:menu.item wire:click="toggleQrDisplay">Show QR Code</flux:menu.item>
+                        <flux:menu.separator />
                         @if($currentQrActive)
-                            Deactivate QR Code
+                            <flux:menu.item wire:click="toggleQrActivation" variant="danger">
+                                Deactivate QR Code
+                            </flux:menu.item>
                         @else
-                            Activate QR Code
-                        @endif
-                    </flux:button>
-                @endif
-                <flux:button wire:click="generateNewQrCode" variant="primary">
-                    Generate New QR Code
-                </flux:button>
-            </div>
+                            <flux:menu.item wire:click="toggleQrActivation">
+                                Activate QR Code
+                            </flux:menu.item>
+                        @endif                  
+                    @endif
+                </flux:menu>
+            </flux:dropdown>            
+            
         </div>
 
         @if($currentQrToken)
@@ -37,8 +41,8 @@
                             <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-sm text-gray-900 dark:text-gray-100">{{ $currentQrToken }}</code>
                         </div>
                         <div class="flex items-start space-x-2">
-                            <span class="font-medium text-gray-900 dark:text-gray-100 mt-0.5">URL:</span>
-                            <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs break-all text-gray-900 dark:text-gray-100 flex-1">{{ route('qr.scan', ['token' => $currentQrToken]) }}</code>
+                            <span class="font-medium text-gray-900 dark:text-gray-100">URL:</span>
+                            <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs text-gray-900 dark:text-gray-100 ">{{ route('qr.scan', ['token' => $currentQrToken]) }}</code>
                         </div>
                         <div class="flex items-center space-x-2">
                             <span class="font-medium text-gray-900 dark:text-gray-100">Status:</span>
@@ -67,7 +71,7 @@
     </flux:card>
 
     <!-- QR Scan Activity -->
-    <flux:card class="bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-700">
+    <flux:card>
         <flux:heading size="lg" class="text-gray-900 dark:text-gray-100 mb-6">QR Scan Activity</flux:heading>
 
         @if($qrScans->count() > 0)
@@ -139,7 +143,7 @@
                                     @if(!$qrScan->completed_distribution)
                                         <flux:button
                                             wire:click="deleteQrCode({{ $qrScan->id }})"
-                                            variant="danger"
+                                            variant="ghost"
                                             size="sm"
                                             wire:confirm="Are you sure you want to delete this QR code?"
                                         >
@@ -187,7 +191,7 @@
 
             <div class="flex">
                 <flux:spacer />
-                <flux:button wire:click="toggleQrDisplay" variant="primary">
+                <flux:button wire:click="toggleQrDisplay" variant="primary" size="sm">
                     Close
                 </flux:button>
             </div>

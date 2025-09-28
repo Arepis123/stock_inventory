@@ -1,19 +1,24 @@
-<div class="max-w-6xl mx-auto p-6">
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="mb-6">      
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white dark:text-white">QR Code Management</h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">Manage QR codes for stock distribution access and monitor scan activity.</p>            
+    </div>
     <!-- Stock Overview -->
     <flux:card class="mb-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="text-center">
-                <flux:heading size="lg" class="text-blue-600 dark:text-blue-400">{{ number_format($stock->total_stock) }}</flux:heading>
+                <flux:heading size="xl" class="text-blue-600 dark:text-blue-400">{{ number_format($stock->total_stock) }}</flux:heading>
                 <flux:subheading>Total Stock</flux:subheading>
                 <flux:description>Total helmet & shirt sets in inventory</flux:description>
             </div>
             <div class="text-center">
-                <flux:heading size="lg" class="text-orange-600 dark:text-orange-400">{{ number_format($stock->allocated_stock) }}</flux:heading>
+                <flux:heading size="xl" class="text-orange-600 dark:text-orange-400">{{ number_format($stock->allocated_stock) }}</flux:heading>
                 <flux:subheading>Allocated Stock</flux:subheading>
                 <flux:description>Sets distributed to staff</flux:description>
             </div>
             <div class="text-center">
-                <flux:heading size="lg" class="text-green-600 dark:text-green-400">{{ number_format($stock->available_stock) }}</flux:heading>
+                <flux:heading size="xl" class="text-green-600 dark:text-green-400">{{ number_format($stock->available_stock) }}</flux:heading>
                 <flux:subheading>Available Stock</flux:subheading>
                 <flux:description>Sets available for distribution</flux:description>
             </div>
@@ -28,28 +33,8 @@
                 <flux:subheading>Manage helmet & shirt set inventory levels</flux:subheading>
             </div>
             <div class="flex space-x-3">
-                <flux:button wire:click="addStock" variant="primary" icon="plus">Add Stock</flux:button>
-                <flux:button wire:click="deductStock" variant="outline" icon="minus">Deduct Stock</flux:button>
-            </div>
-        </div>
-
-        <!-- Stock Information -->
-        <div class="bg-zinc-50 dark:bg-zinc-800 rounded-lg p-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                    <span class="font-medium text-zinc-700 dark:text-zinc-300">Item Type:</span>
-                    <span class="ml-2">Safety Helmet + Shirt Set</span>
-                </div>
-                <div>
-                    <span class="font-medium text-zinc-700 dark:text-zinc-300">Last Updated:</span>
-                    <span class="ml-2">{{ $stock->updated_at->format('d M Y, H:i') }}</span>
-                </div>
-                @if($stock->notes)
-                <div class="md:col-span-2">
-                    <span class="font-medium text-zinc-700 dark:text-zinc-300">Notes:</span>
-                    <span class="ml-2">{{ $stock->notes }}</span>
-                </div>
-                @endif
+                <flux:button wire:click="addStock" variant="primary" icon="plus" size="sm">Add Stock</flux:button>
+                <flux:button wire:click="deductStock" variant="outline" icon="minus" size="sm">Deduct Stock</flux:button>
             </div>
         </div>
 
@@ -166,8 +151,8 @@
             </div>
 
             <div class="flex justify-end space-x-3">
-                <flux:button type="button" variant="subtle" wire:click="closeModal">Cancel</flux:button>
-                <flux:button type="submit" variant="primary">
+                <flux:button type="button" variant="subtle" wire:click="closeModal" size="sm">Cancel</flux:button>
+                <flux:button type="submit" variant="primary" size="sm">
                     {{ $action_type === 'add' ? 'Add Stock' : 'Deduct Stock' }}
                 </flux:button>
             </div>

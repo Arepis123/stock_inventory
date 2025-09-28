@@ -51,9 +51,9 @@
                     @endif
                 </flux:field>
 
-                <!-- For Use Stock -->
+                <!-- For Contractor Use -->
                 <flux:field>
-                    <flux:label>For Use Stock</flux:label>
+                    <flux:label>For Contractor Use</flux:label>
                     <flux:input type="number" wire:model.live="for_use_stock" placeholder="Enter quantity for use" min="0" />
                     <flux:error name="for_use_stock" />
                     <flux:description>Quantity for immediate use</flux:description>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark scrollbar-hide">
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
+    <body class="min-h-screen bg-white dark:bg-zinc-800 scrollbar-hide overflow-y-auto">
         <flux:sidebar sticky collapsible class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
             <flux:sidebar.header>
                 <flux:sidebar.brand
@@ -18,18 +18,25 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
+                <div class="px-3 py-2 in-data-flux-sidebar-collapsed-desktop:hidden">
+                    <h3 class="text-xs font-semibold text-gray-400 dark:text-gray-400 uppercase tracking-wider">{{ __('MAIN') }}</h3>
+                </div>                
                 <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:sidebar.item>
                 <flux:sidebar.item icon="clipboard-document-list" :href="route('stock-inventory')" :current="request()->routeIs('stock-inventory')" wire:navigate>{{ __('Stock Inventory') }}</flux:sidebar.item>
 
-
-                <flux:sidebar.group expandable heading="Admin">
-                    <flux:sidebar.item icon="map" :href="route('admin.regions')" :current="request()->routeIs('admin.regions')" wire:navigate>ABM Centres</flux:sidebar.item>
-                    <flux:sidebar.item icon="building-office" :href="route('admin.warehouses')" :current="request()->routeIs('admin.warehouses')" wire:navigate>Assessment Locations</flux:sidebar.item>
-                    <flux:sidebar.item icon="users" :href="route('admin.staff')" :current="request()->routeIs('admin.staff')" wire:navigate>Staff</flux:sidebar.item>
-                    <flux:sidebar.item icon="archive-box" :href="route('admin.stock')" :current="request()->routeIs('admin.stock')" wire:navigate>Stock Management</flux:sidebar.item>
-                    <flux:sidebar.item icon="clipboard-document-list" :href="route('admin.distributions')" :current="request()->routeIs('admin.distributions')" wire:navigate>Distribution Records</flux:sidebar.item>
-                    <flux:sidebar.item icon="qr-code" :href="route('admin.qrcode')" :current="request()->routeIs('admin.qrcode')" wire:navigate>QR Code Management</flux:sidebar.item>
-                </flux:sidebar.group>
+                <div class="px-3 py-2 mt-4 in-data-flux-sidebar-collapsed-desktop:hidden">
+                    <h3 class="text-xs font-semibold text-gray-400 dark:text-gray-400 uppercase tracking-wider">{{ __('ADMIN') }}</h3>
+                </div>
+                <flux:sidebar.item icon="clipboard-document-list" :href="route('admin.distributions')" :current="request()->routeIs('admin.distributions')" wire:navigate>Distribution Records</flux:sidebar.item>
+                <flux:sidebar.item icon="archive-box" :href="route('admin.stock')" :current="request()->routeIs('admin.stock')" wire:navigate>Stock Management</flux:sidebar.item>                
+                <flux:sidebar.item icon="qr-code" :href="route('admin.qrcode')" :current="request()->routeIs('admin.qrcode')" wire:navigate>QR Code Management</flux:sidebar.item>
+        
+                <div class="px-3 py-2 mt-4 in-data-flux-sidebar-collapsed-desktop:hidden">
+                    <h3 class="text-xs font-semibold text-gray-400 dark:text-gray-400 uppercase tracking-wider">{{ __('CONFIGURATION') }}</h3>
+                </div>  
+                <flux:sidebar.item icon="map" :href="route('admin.regions')" :current="request()->routeIs('admin.regions')" wire:navigate>ABM Centres</flux:sidebar.item>
+                <flux:sidebar.item icon="building-office" :href="route('admin.warehouses')" :current="request()->routeIs('admin.warehouses')" wire:navigate>Assessment Locations</flux:sidebar.item>
+                <flux:sidebar.item icon="users" :href="route('admin.staff')" :current="request()->routeIs('admin.staff')" wire:navigate>Staff</flux:sidebar.item>              
             </flux:sidebar.nav>
 
             <flux:sidebar.spacer />
