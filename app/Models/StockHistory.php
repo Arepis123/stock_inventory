@@ -8,6 +8,7 @@ class StockHistory extends Model
 {
     protected $fillable = [
         'action_type',
+        'equipment_type',
         'quantity',
         'total_stock_before',
         'total_stock_after',

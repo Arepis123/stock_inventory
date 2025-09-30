@@ -36,16 +36,16 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="space-y-4">
                     <div class="space-y-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="font-medium text-gray-900 dark:text-gray-100">Token:</span>
-                            <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-sm text-gray-900 dark:text-gray-100">{{ $currentQrToken }}</code>
+                        <div class="space-y-2">
+                            <flux:text class="text-gray-900 dark:text-gray-100" variant="strong">Token:</flux:text>
+                            <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-sm text-gray-900 dark:text-gray-100 break-all">{{ $currentQrToken }}</code>
                         </div>
-                        <div class="flex items-start space-x-2">
-                            <span class="font-medium text-gray-900 dark:text-gray-100">URL:</span>
-                            <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs text-gray-900 dark:text-gray-100 ">{{ route('qr.scan', ['token' => $currentQrToken]) }}</code>
+                        <div class="space-y-2">
+                            <flux:text class="text-gray-900 dark:text-gray-100" variant="strong">URL:</flux:text>
+                            <code class="bg-gray-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs text-gray-900 dark:text-gray-100 break-all block">{{ route('qr.scan', ['token' => $currentQrToken]) }}</code>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="font-medium text-gray-900 dark:text-gray-100">Status:</span>
+                            <flux:text class="text-gray-900 dark:text-gray-100" variant="strong">Status:</flux:text>
                             @if($currentQrActive)
                                 <flux:badge color="green" size="sm">
                                     <flux:icon.check-circle class="w-3 h-3 mr-1" />

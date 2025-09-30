@@ -25,6 +25,8 @@ class DistributionManagement extends Component
     public function updatedSearch()
     {
         $this->resetPage();
+        // Optional: Add debug logging to check if search is working
+        \Log::info('Search updated: ' . $this->search);
     }
 
     public function updatedSelectedStaff()
@@ -82,7 +84,8 @@ class DistributionManagement extends Component
         // Search filter
         if ($this->search) {
             $query->where(function($q) {
-                $q->where('warehouse', 'like', '%' . $this->search . '%')
+                $q->where('staff_name', 'like', '%' . $this->search . '%')
+                  ->orWhere('warehouse', 'like', '%' . $this->search . '%')
                   ->orWhere('remarks', 'like', '%' . $this->search . '%');
             });
         }
@@ -145,7 +148,10 @@ class DistributionManagement extends Component
 
     public function getTotalDistributedProperty()
     {
-        return StockInventory::sum('quantity');
+        // Sum helmet and t-shirt quantities separately for accurate count
+        $helmetTotal = StockInventory::sum('helmet_quantity');
+        $tshirtTotal = StockInventory::sum('tshirt_quantity');
+        return $helmetTotal + $tshirtTotal;
     }
 
     public function getTotalRecordsProperty()

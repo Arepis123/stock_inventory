@@ -19,6 +19,15 @@ class StockInventory extends Model
         'quantity',
         'remarks',
         'distribution_date',
+        // New fields for separated equipment tracking
+        'helmet_quantity',
+        'tshirt_quantity',
+        'deduction_source',
+        // New fields for separated usage tracking
+        'for_use_helmets',
+        'for_use_tshirts',
+        'for_storing_helmets',
+        'for_storing_tshirts',
     ];
 
     protected $casts = [

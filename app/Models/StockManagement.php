@@ -34,6 +34,70 @@ class StockManagement extends Model
         );
     }
 
+    public static function getSafetyHelmetStock()
+    {
+        return self::firstOrCreate(
+            ['item_type' => 'safety_helmet'],
+            [
+                'total_stock' => 0,
+                'allocated_stock' => 0,
+                'available_stock' => 0,
+            ]
+        );
+    }
+
+    public static function getTshirtStock()
+    {
+        return self::firstOrCreate(
+            ['item_type' => 'tshirt'],
+            [
+                'total_stock' => 0,
+                'allocated_stock' => 0,
+                'available_stock' => 0,
+            ]
+        );
+    }
+
+    public static function checkStockAvailability($helmetQuantity, $tshirtQuantity)
+    {
+        $helmetStock = self::getSafetyHelmetStock();
+        $tshirtStock = self::getTshirtStock();
+
+        $result = [
+            'helmet_available' => $helmetStock->available_stock >= $helmetQuantity,
+            'tshirt_available' => $tshirtStock->available_stock >= $tshirtQuantity,
+            'helmet_stock' => $helmetStock->available_stock,
+            'tshirt_stock' => $tshirtStock->available_stock,
+        ];
+
+        $result['all_available'] = $result['helmet_available'] && $result['tshirt_available'];
+
+        return $result;
+    }
+
+    public static function deductStock($helmetQuantity, $tshirtQuantity)
+    {
+        $helmetStock = self::getSafetyHelmetStock();
+        $tshirtStock = self::getTshirtStock();
+
+        if ($helmetQuantity > 0) {
+            $helmetStock->allocated_stock += $helmetQuantity;
+            $helmetStock->updateAvailableStock();
+            $helmetStock->save();
+        }
+
+        if ($tshirtQuantity > 0) {
+            $tshirtStock->allocated_stock += $tshirtQuantity;
+            $tshirtStock->updateAvailableStock();
+            $tshirtStock->save();
+        }
+
+        return [
+            'helmet_stock' => $helmetStock,
+            'tshirt_stock' => $tshirtStock,
+        ];
+    }
+
     public function updateAvailableStock()
     {
         $this->available_stock = $this->total_stock - $this->allocated_stock;

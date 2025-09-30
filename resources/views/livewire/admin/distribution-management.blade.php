@@ -34,12 +34,6 @@
                 <flux:accordion.content>
                     <div class="space-y-4 pt-4 mx-3">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <!-- Search -->
-                            <flux:field>
-                                <flux:label>Search</flux:label>
-                                <flux:input wire:model.live.debounce.300ms="search" size="sm" placeholder="Search warehouse or remarks..." />
-                            </flux:field>
-
                             <!-- Staff Name Filter -->
                             <flux:field>
                                 <flux:label>Staff Name</flux:label>
@@ -118,6 +112,14 @@
         </flux:accordion>
     </div>
 
+    <!-- Search -->
+    <div class="mb-6 mx-2">
+        <flux:field>
+            <flux:label>Search Distribution Records</flux:label>
+            <flux:input wire:model.live="search" placeholder="Search by staff name, warehouse, or remarks..." />
+        </flux:field>
+    </div>
+
     <!-- Distribution Records Table -->
     <flux:card>
         <flux:heading size="sm" class="mb-4">Distribution Records</flux:heading>
@@ -166,11 +168,7 @@
                     >For Storing</flux:table.column>
                     <flux:table.column
                         align="center"
-                        sortable
-                        :sorted="$sortBy === 'quantity'"
-                        :direction="$sortDirection"
-                        wire:click="sort('quantity')"
-                    >Total</flux:table.column>
+                    >Source</flux:table.column>
                     <flux:table.column>Remarks</flux:table.column>
                     <flux:table.column
                         sortable
@@ -209,28 +207,64 @@
                                 <div class="text-sm">{{ $distribution->warehouse }}</div>
                             </flux:table.cell>
                             <flux:table.cell align="center">
-                                {{ number_format($distribution->for_use_stock) }}
+                                @if($distribution->for_use_stock > 0 || ($distribution->for_use_helmets > 0 || $distribution->for_use_tshirts > 0))
+                                    <div class="text-sm">
+                                        <div class="font-medium">{{ number_format($distribution->for_use_stock ?: (($distribution->for_use_helmets ?: 0) + ($distribution->for_use_tshirts ?: 0))) }}</div>
+                                        @if(($distribution->for_use_helmets ?: 0) > 0 || ($distribution->for_use_tshirts ?: 0) > 0)
+                                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-0">
+                                                @if(($distribution->for_use_helmets ?: 0) > 0)<span class="px-1">H:{{ $distribution->for_use_helmets }}</span>@endif
+                                                @if(($distribution->for_use_helmets ?: 0) > 0 && ($distribution->for_use_tshirts ?: 0) > 0) @endif
+                                                @if(($distribution->for_use_tshirts ?: 0) > 0)<span class="px-1">T:{{ $distribution->for_use_tshirts }}</span>@endif
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
                             </flux:table.cell>
                             <flux:table.cell align="center">
-                                {{ number_format($distribution->for_storing) }}
+                                @if($distribution->for_storing > 0 || ($distribution->for_storing_helmets > 0 || $distribution->for_storing_tshirts > 0))
+                                    <div class="text-sm">
+                                        <div class="font-medium dark:text-white">{{ number_format($distribution->for_storing ?: (($distribution->for_storing_helmets ?: 0) + ($distribution->for_storing_tshirts ?: 0))) }}</div>
+                                        @if(($distribution->for_storing_helmets ?: 0) > 0 || ($distribution->for_storing_tshirts ?: 0) > 0)
+                                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-0">
+                                                @if(($distribution->for_storing_helmets ?: 0) > 0)<span class="px-1">H:{{ $distribution->for_storing_helmets }}</span>@endif
+                                                @if(($distribution->for_storing_helmets ?: 0) > 0 && ($distribution->for_storing_tshirts ?: 0) > 0) @endif
+                                                @if(($distribution->for_storing_tshirts ?: 0) > 0)<span class="px-1">T:{{ $distribution->for_storing_tshirts }}</span>@endif
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
                             </flux:table.cell>
-                            <flux:table.cell align="center" variant="strong">
-                                {{ number_format($distribution->quantity) }}
+                            <flux:table.cell align="center">
+                                @if($distribution->deduction_source)
+                                    <flux:badge
+                                        color="{{ $distribution->deduction_source === 'total_stocks' ? 'zinc' : 'zinc' }}"
+                                        size="sm"
+                                    >
+                                        {{ $distribution->deduction_source === 'total_stocks' ? 'Main Stock' : 'ABM Storage' }}
+                                    </flux:badge>
+                                @else
+                                    <span class="text-gray-400 text-xs">Legacy</span>
+                                @endif
                             </flux:table.cell>
                             <flux:table.cell>
                                 <div class="text-sm text-gray-600 dark:text-gray-400 max-w-xs truncate">
                                     {{ $distribution->remarks ?: '-' }}
                                 </div>
                             </flux:table.cell>
-                            <flux:table.cell>
-                                <div class="text-xs text-gray-500">
-                                    {{ $distribution->created_at->format('d M Y H:i') }}
+                            <flux:table.cell class="flex items-center justify-center">
+                                <div class="text-xs text-gray-500 flex items-center">
+                                    {{ $distribution->created_at->format('d M Y H:i') }} <br/>
+                                    {{ $distribution->created_at->format('H:i') }}
                                 </div>
                             </flux:table.cell>
                         </flux:table.row>
                     @empty
                         <flux:table.row>
-                            <flux:table.cell colspan="10" class="text-center py-8">
+                            <flux:table.cell colspan="11" class="text-center py-8">
                                 <div class="text-gray-500 dark:text-gray-400">
                                     <flux:icon.clipboard-document-list class="w-8 h-8 mx-auto mb-1 opacity-50" />
                                     <p class=" font-medium">No distribution records found</p>
