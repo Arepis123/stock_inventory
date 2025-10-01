@@ -162,7 +162,7 @@ class Dashboard extends Component
     // Recent Activity
     public function getRecentDistributionsProperty()
     {
-        return StockInventory::with([])
+        return StockInventory::with(['regionModel'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
