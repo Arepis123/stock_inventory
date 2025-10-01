@@ -148,6 +148,30 @@ class StockInventoryForm extends Component
         $this->updateQuantity();
     }
 
+    public function resetForm()
+    {
+        $this->reset([
+            'staff_name',
+            'region',
+            'warehouse',
+            'for_use_stock',
+            'for_storing',
+            'quantity',
+            'remarks',
+            'helmet_quantity',
+            'tshirt_quantity',
+            'deduction_source',
+            'for_use_helmets',
+            'for_use_tshirts',
+            'for_storing_helmets',
+            'for_storing_tshirts'
+        ]);
+
+        $this->distribution_date = now()->format('Y-m-d');
+
+        Flux::toast('Form reset successfully', 'Reset', 2000, 'success');
+    }
+
     public function debugForm()
     {
         $data = [

@@ -3,7 +3,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800 scrollbar-hide overflow-y-auto">
+    <body class="min-h-screen bg-zinc-50 dark:bg-zinc-900 scrollbar-hide overflow-y-auto">
         <flux:sidebar sticky collapsible class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
             <flux:sidebar.header>
                 <flux:sidebar.brand
@@ -30,7 +30,7 @@
                 <flux:sidebar.item icon="table-cells" :href="route('admin.distributions')" :current="request()->routeIs('admin.distributions')" wire:navigate>Distribution Records</flux:sidebar.item>
                 <flux:sidebar.item icon="archive-box" :href="route('admin.stock')" :current="request()->routeIs('admin.stock')" wire:navigate>Stock Management</flux:sidebar.item>                
                 <flux:sidebar.item icon="qr-code" :href="route('admin.qrcode')" :current="request()->routeIs('admin.qrcode')" wire:navigate>QR Code Management</flux:sidebar.item>
-                <flux:sidebar.item icon="document-text" :href="route('admin.qrcode')" :current="request()->routeIs('admin.qrcode')" wire:navigate>Reports</flux:sidebar.item>
+                {{-- <flux:sidebar.item icon="document-text" :href="route('admin.qrcode')" :current="request()->routeIs('admin.qrcode')" wire:navigate>Reports</flux:sidebar.item> --}}
         
                 <div class="px-3 py-2 mt-4 in-data-flux-sidebar-collapsed-desktop:hidden">
                     <h3 class="text-xs font-semibold text-gray-400 dark:text-gray-400 uppercase tracking-wider">{{ __('CONFIGURATION') }}</h3>

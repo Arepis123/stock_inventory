@@ -4,7 +4,7 @@
         @include('partials.head')
         <title>Stock Inventory Distribution - {{ config('app.name') }}</title>
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
+    <body class="min-h-screen bg-zinc-50 dark:bg-zinc-900">
         <div class="min-h-screen py-8">
             <livewire:stock-inventory-form />
         </div>

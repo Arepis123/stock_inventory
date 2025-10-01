@@ -1,4 +1,4 @@
-<flux:main class="p-6">
+<flux:main class="">
     <!-- Header -->
     <div class="mb-6">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
@@ -226,9 +226,9 @@
                                         <div class="font-medium dark:text-white">{{ number_format($distribution->for_use_stock ?: (($distribution->for_use_helmets ?: 0) + ($distribution->for_use_tshirts ?: 0))) }}</div>
                                         @if(($distribution->for_use_helmets ?: 0) > 0 || ($distribution->for_use_tshirts ?: 0) > 0)
                                             <div class="text-xs text-gray-600 dark:text-gray-400 mt-0">
-                                                @if(($distribution->for_use_helmets ?: 0) > 0)<span class="px-1">H:{{ $distribution->for_use_helmets }}</span>@endif
+                                                @if(($distribution->for_use_helmets ?: 0) > 0)<span class="me-1">H:{{ $distribution->for_use_helmets }}</span>@endif
                                                 @if(($distribution->for_use_helmets ?: 0) > 0 && ($distribution->for_use_tshirts ?: 0) > 0) @endif
-                                                @if(($distribution->for_use_tshirts ?: 0) > 0)<span class="px-1">T:{{ $distribution->for_use_tshirts }}</span>@endif
+                                                @if(($distribution->for_use_tshirts ?: 0) > 0)<span class="px-0">T:{{ $distribution->for_use_tshirts }}</span>@endif
                                             </div>
                                         @endif
                                     </div>
@@ -242,9 +242,9 @@
                                         <div class="font-medium dark:text-white">{{ number_format($distribution->for_storing ?: (($distribution->for_storing_helmets ?: 0) + ($distribution->for_storing_tshirts ?: 0))) }}</div>
                                         @if(($distribution->for_storing_helmets ?: 0) > 0 || ($distribution->for_storing_tshirts ?: 0) > 0)
                                             <div class="text-xs text-gray-600 dark:text-gray-400 mt-0">
-                                                @if(($distribution->for_storing_helmets ?: 0) > 0)<span class="px-1">H:{{ $distribution->for_storing_helmets }}</span>@endif
+                                                @if(($distribution->for_storing_helmets ?: 0) > 0)<span class="me-1">H:{{ $distribution->for_storing_helmets }}</span>@endif
                                                 @if(($distribution->for_storing_helmets ?: 0) > 0 && ($distribution->for_storing_tshirts ?: 0) > 0) @endif
-                                                @if(($distribution->for_storing_tshirts ?: 0) > 0)<span class="px-1">T:{{ $distribution->for_storing_tshirts }}</span>@endif
+                                                @if(($distribution->for_storing_tshirts ?: 0) > 0)<span class="px-0">T:{{ $distribution->for_storing_tshirts }}</span>@endif
                                             </div>
                                         @endif
                                     </div>
@@ -271,7 +271,7 @@
                             </flux:table.cell>
                             <flux:table.cell class="flex items-center justify-center">
                                 <div class="text-xs text-gray-500 flex items-center">
-                                    {{ $distribution->created_at->format('d M Y H:i') }} <br/>
+                                    {{ $distribution->created_at->format('d M Y') }} <br/>
                                     {{ $distribution->created_at->format('H:i') }}
                                 </div>
                             </flux:table.cell>

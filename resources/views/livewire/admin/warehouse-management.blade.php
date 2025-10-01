@@ -15,7 +15,7 @@
 
         <!-- Assessment Locations Table -->
         <div class="overflow-x-auto">
-            <flux:table>
+            <flux:table :paginate="$warehouses">
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>ABM Centre</flux:table.column>
@@ -31,7 +31,14 @@
                             </flux:table.cell>
                             <flux:table.cell>
                                 @if($warehouse->region)
-                                    <flux:badge size="sm" color="blue">{{ $warehouse->region->name }}</flux:badge>
+                                    <flux:badge size="sm" 
+                                        color="{{
+                                            $warehouse->region->code === 'east' ? 'blue' :
+                                            ($warehouse->region->code === 'west' ? 'green' :
+                                            ($warehouse->region->code === 'north' ? 'purple' :
+                                            ($warehouse->region->code === 'south' ? 'orange' : 'gray')))
+                                        }}"
+                                    >{{ $warehouse->region->name }}</flux:badge>
                                 @else
                                     <flux:badge size="sm" color="red">No Region</flux:badge>
                                 @endif

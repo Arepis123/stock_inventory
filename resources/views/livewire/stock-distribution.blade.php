@@ -1,4 +1,4 @@
-<div class="max-w-4xl mx-auto p-3 sm:p-6">
+<div class="max-w-4xl mx-auto p-1 lg:p-6">
     @if($scanned)
         <div x-data="{ visible: true }" x-show="visible" x-collapse class="mb-6">
             <div x-show="visible" x-transition>
@@ -19,7 +19,7 @@
             <flux:subheading>Record distribution of safety helmets and t-shirts with flexible stock deduction options</flux:subheading>
         </div>
 
-        <form wire:submit.prevent="submit" class="space-y-6">
+        <form class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Staff Name -->
                 <flux:field>
@@ -63,9 +63,6 @@
                         @endforeach
                     </flux:select>
                     <flux:error name="warehouse" />
-                    @if(!$region)
-                        <flux:description>Please select an ABM centre first</flux:description>
-                    @endif
                 </flux:field>
 
                 <!-- Stock Deduction Source -->
@@ -174,7 +171,7 @@
             </div>
 
             <!-- Summary Section -->
-            <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 space-y-4">
+            <div class="bg-green-100 dark:bg-green-900/30 rounded-lg p-4 space-y-4 my-4">
                 <flux:heading size="sm" class="text-green-700 dark:text-green-300">Distribution Summary</flux:heading>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -215,8 +212,26 @@
 
             <!-- Submit Button -->
             <div class="flex justify-end space-x-3 mt-3">
-                <flux:button type="button" variant="subtle" wire:click="$refresh">Reset</flux:button>
-                <flux:button type="submit" variant="primary">Save Distribution Record</flux:button>
+                <flux:button
+                    type="button"
+                    variant="subtle"
+                    wire:click="resetForm"
+                    wire:loading.attr="disabled"
+                    wire:loading.class="opacity-50"
+                >
+                    <span wire:loading.remove wire:target="resetForm">Reset</span>
+                    <span wire:loading wire:target="resetForm">Resetting...</span>
+                </flux:button>
+                <flux:button
+                    type="button"
+                    variant="primary"
+                    wire:click="submit"
+                    wire:loading.attr="disabled"
+                    wire:loading.class="opacity-50"
+                >
+                    <span wire:loading.remove wire:target="submit">Save Distribution Record</span>
+                    <span wire:loading wire:target="submit">Saving...</span>
+                </flux:button>
             </div>
         </form>
     </flux:card>

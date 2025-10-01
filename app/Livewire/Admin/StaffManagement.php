@@ -4,10 +4,12 @@ namespace App\Livewire\Admin;
 
 use App\Models\Staff;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Flux\Flux;
 
 class StaffManagement extends Component
 {
+    use WithPagination;
     public $name = '';
     public $is_active = true;
     public $editingStaff = null;
@@ -73,7 +75,7 @@ class StaffManagement extends Component
     public function render()
     {
         return view('livewire.admin.staff-management', [
-            'staff' => Staff::orderBy('name')->get()
+            'staff' => Staff::orderBy('name')->paginate(10)
         ]);
     }
 }

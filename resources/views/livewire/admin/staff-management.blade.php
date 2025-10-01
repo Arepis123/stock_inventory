@@ -15,7 +15,7 @@
 
         <!-- Staff Table -->
         <div class="overflow-x-auto">
-            <flux:table>
+            <flux:table :paginate="$staff">
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column align="center">Status</flux:table.column>

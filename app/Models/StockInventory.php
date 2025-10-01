@@ -53,4 +53,9 @@ class StockInventory extends Model
             default => $this->region,
         };
     }
+
+    public function regionModel()
+    {
+        return $this->belongsTo(Region::class, 'region', 'code');
+    }
 }

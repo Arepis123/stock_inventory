@@ -15,7 +15,7 @@
 
         <!-- Regions Table -->
         <div class="overflow-x-auto">
-            <flux:table>
+            <flux:table :paginate="$regions">
                 <flux:table.columns>
                     <flux:table.column>Name</flux:table.column>
                     <flux:table.column>Code</flux:table.column>

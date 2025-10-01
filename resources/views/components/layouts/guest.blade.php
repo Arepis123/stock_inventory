@@ -3,7 +3,7 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800 scrollbar-hide overflow-y-auto">
+    <body class="min-h-screen bg-zinc-50 dark:bg-zinc-900 scrollbar-hide overflow-y-auto">
         <flux:header class="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700">
             <div class="w-full flex justify-center px-3 py-6 sm:px-6 sm:py-4">
                 <div class="flex items-center">

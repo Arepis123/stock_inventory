@@ -5,10 +5,12 @@ namespace App\Livewire\Admin;
 use App\Models\Region;
 use App\Models\Warehouse;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Flux\Flux;
 
 class WarehouseManagement extends Component
 {
+    use WithPagination;
     public $name = '';
     public $region_id = '';
     public $is_active = true;
@@ -80,7 +82,7 @@ class WarehouseManagement extends Component
     public function render()
     {
         return view('livewire.admin.warehouse-management', [
-            'warehouses' => Warehouse::with('region')->get(),
+            'warehouses' => Warehouse::with('region')->paginate(10),
             'regions' => Region::where('is_active', true)->get()
         ]);
     }
