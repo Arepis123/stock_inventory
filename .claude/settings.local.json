@@ -20,7 +20,9 @@
       "Bash(npm install)",
       "Bash(timeout 5s npm run dev)",
       "Bash(timeout 3s npm run dev)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(magick identify:*)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
