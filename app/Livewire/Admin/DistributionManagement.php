@@ -243,30 +243,60 @@ class DistributionManagement extends Component
 <Worksheet ss:Name="Distribution Records">
 <Table>
 <Row>
-<Cell><Data ss:Type="String">Date</Data></Cell>
-<Cell><Data ss:Type="String">Staff Name</Data></Cell>
-<Cell><Data ss:Type="String">ABM Centre</Data></Cell>
-<Cell><Data ss:Type="String">Assessment Location</Data></Cell>
-<Cell><Data ss:Type="String">For Use</Data></Cell>
-<Cell><Data ss:Type="String">For Storing</Data></Cell>
-<Cell><Data ss:Type="String">Total</Data></Cell>
-<Cell><Data ss:Type="String">Remarks</Data></Cell>
-<Cell><Data ss:Type="String">Created At</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">No</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">Date</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">Staff Name</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">ABM Centre</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">Assessment Location</Data></Cell>
+<Cell ss:MergeAcross="1"><Data ss:Type="String">For Use</Data></Cell>
+<Cell ss:MergeAcross="1"><Data ss:Type="String">For Storing</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">Total</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">Remarks</Data></Cell>
+<Cell ss:MergeDown="1"><Data ss:Type="String">Created At</Data></Cell>
+</Row>
+<Row>
+<Cell ss:Index="6"><Data ss:Type="String">Helmet</Data></Cell>
+<Cell><Data ss:Type="String">Shirt</Data></Cell>
+<Cell><Data ss:Type="String">Helmet</Data></Cell>
+<Cell><Data ss:Type="String">Shirt</Data></Cell>
 </Row>';
 
+        $counter = 1;
         foreach ($distributions as $distribution) {
             $xmlContent .= '<Row>
+<Cell><Data ss:Type="Number">' . $counter . '</Data></Cell>
 <Cell><Data ss:Type="String">' . htmlspecialchars(Carbon::parse($distribution->distribution_date)->format('d M Y')) . '</Data></Cell>
 <Cell><Data ss:Type="String">' . htmlspecialchars($distribution->staff_name) . '</Data></Cell>
 <Cell><Data ss:Type="String">' . htmlspecialchars($this->getRegionName($distribution->region)) . '</Data></Cell>
 <Cell><Data ss:Type="String">' . htmlspecialchars($distribution->warehouse) . '</Data></Cell>
-<Cell><Data ss:Type="Number">' . $distribution->for_use_stock . '</Data></Cell>
-<Cell><Data ss:Type="Number">' . $distribution->for_storing . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . ($distribution->for_use_helmets ?? 0) . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . ($distribution->for_use_tshirts ?? 0) . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . ($distribution->for_storing_helmets ?? 0) . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . ($distribution->for_storing_tshirts ?? 0) . '</Data></Cell>
 <Cell><Data ss:Type="Number">' . $distribution->quantity . '</Data></Cell>
 <Cell><Data ss:Type="String">' . htmlspecialchars($distribution->remarks ?: '-') . '</Data></Cell>
 <Cell><Data ss:Type="String">' . htmlspecialchars($distribution->created_at->format('d M Y H:i')) . '</Data></Cell>
 </Row>';
+            $counter++;
         }
+
+        // Add totals row
+        $totalForUseHelmets = $distributions->sum('for_use_helmets');
+        $totalForUseShirts = $distributions->sum('for_use_tshirts');
+        $totalForStoringHelmets = $distributions->sum('for_storing_helmets');
+        $totalForStoringShirts = $distributions->sum('for_storing_tshirts');
+        $totalQuantity = $distributions->sum('quantity');
+
+        $xmlContent .= '<Row>
+<Cell ss:MergeAcross="4"><Data ss:Type="String">TOTAL</Data></Cell>
+<Cell><Data ss:Type="Number">' . $totalForUseHelmets . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . $totalForUseShirts . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . $totalForStoringHelmets . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . $totalForStoringShirts . '</Data></Cell>
+<Cell><Data ss:Type="Number">' . $totalQuantity . '</Data></Cell>
+<Cell><Data ss:Type="String"></Data></Cell>
+<Cell><Data ss:Type="String"></Data></Cell>
+</Row>';
 
         $xmlContent .= '</Table>
 </Worksheet>

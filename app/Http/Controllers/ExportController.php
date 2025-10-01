@@ -69,27 +69,48 @@ class ExportController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Distribution Records');
 
-        // Set headers
-        $headers = [
-            'A1' => 'No',
-            'B1' => 'Date',
-            'C1' => 'Staff Name',
-            'D1' => 'ABM Centre',
-            'E1' => 'Assessment Location',
-            'F1' => 'For Use',
-            'G1' => 'For Storing',
-            'H1' => 'Total',
-            'I1' => 'Remarks',
-            'J1' => 'Created At'
-        ];
+        // Set headers with sub-headers for For Use and For Storing
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Date');
+        $sheet->setCellValue('C1', 'Staff Name');
+        $sheet->setCellValue('D1', 'ABM Centre');
+        $sheet->setCellValue('E1', 'Assessment Location');
+        $sheet->setCellValue('F1', 'For Use');
+        $sheet->setCellValue('H1', 'For Storing');
+        $sheet->setCellValue('J1', 'Total');
+        $sheet->setCellValue('K1', 'Remarks');
+        $sheet->setCellValue('L1', 'Created At');
 
-        // Apply headers and styling
-        foreach ($headers as $cell => $value) {
-            $sheet->setCellValue($cell, $value);
-        }
+        // Merge cells for main headers
+        $sheet->mergeCells('F1:G1'); // For Use
+        $sheet->mergeCells('H1:I1'); // For Storing
 
-        // Style the header row
-        $sheet->getStyle('A1:J1')->applyFromArray([
+        // Set sub-headers in row 2
+        $sheet->setCellValue('A2', '');
+        $sheet->setCellValue('B2', '');
+        $sheet->setCellValue('C2', '');
+        $sheet->setCellValue('D2', '');
+        $sheet->setCellValue('E2', '');
+        $sheet->setCellValue('F2', 'Helmet');
+        $sheet->setCellValue('G2', 'Shirt');
+        $sheet->setCellValue('H2', 'Helmet');
+        $sheet->setCellValue('I2', 'Shirt');
+        $sheet->setCellValue('J2', '');
+        $sheet->setCellValue('K2', '');
+        $sheet->setCellValue('L2', '');
+
+        // Merge first row cells that span both rows
+        $sheet->mergeCells('A1:A2');
+        $sheet->mergeCells('B1:B2');
+        $sheet->mergeCells('C1:C2');
+        $sheet->mergeCells('D1:D2');
+        $sheet->mergeCells('E1:E2');
+        $sheet->mergeCells('J1:J2');
+        $sheet->mergeCells('K1:K2');
+        $sheet->mergeCells('L1:L2');
+
+        // Style the header rows
+        $sheet->getStyle('A1:L2')->applyFromArray([
             'font' => [
                 'bold' => true,
                 'size' => 12,
@@ -106,7 +127,7 @@ class ExportController extends Controller
         ]);
 
         // Add data rows
-        $row = 2;
+        $row = 3; // Start from row 3 since rows 1-2 are headers
         $counter = 1;
         foreach ($distributions as $distribution) {
             $regionName = $this->getRegionName($distribution->region);
@@ -116,11 +137,19 @@ class ExportController extends Controller
             $sheet->setCellValue('C' . $row, $distribution->staff_name);
             $sheet->setCellValue('D' . $row, $regionName);
             $sheet->setCellValue('E' . $row, $distribution->warehouse);
-            $sheet->setCellValue('F' . $row, $distribution->for_use_stock);
-            $sheet->setCellValue('G' . $row, $distribution->for_storing);
-            $sheet->setCellValue('H' . $row, $distribution->quantity);
-            $sheet->setCellValue('I' . $row, $distribution->remarks ?: '-');
-            $sheet->setCellValue('J' . $row, $distribution->created_at->format('d M Y H:i'));
+
+            // For Use columns (Helmet and Shirt)
+            $sheet->setCellValue('F' . $row, $distribution->for_use_helmets ?? 0);
+            $sheet->setCellValue('G' . $row, $distribution->for_use_tshirts ?? 0);
+
+            // For Storing columns (Helmet and Shirt)
+            $sheet->setCellValue('H' . $row, $distribution->for_storing_helmets ?? 0);
+            $sheet->setCellValue('I' . $row, $distribution->for_storing_tshirts ?? 0);
+
+            // Total
+            $sheet->setCellValue('J' . $row, $distribution->quantity);
+            $sheet->setCellValue('K' . $row, $distribution->remarks ?: '-');
+            $sheet->setCellValue('L' . $row, $distribution->created_at->format('d M Y H:i'));
 
             $row++;
             $counter++;
@@ -129,21 +158,25 @@ class ExportController extends Controller
         // Add totals row if there's data
         if ($distributions->count() > 0) {
             // Calculate totals
-            $totalForUse = $distributions->sum('for_use_stock');
-            $totalForStoring = $distributions->sum('for_storing');
+            $totalForUseHelmets = $distributions->sum('for_use_helmets');
+            $totalForUseShirts = $distributions->sum('for_use_tshirts');
+            $totalForStoringHelmets = $distributions->sum('for_storing_helmets');
+            $totalForStoringShirts = $distributions->sum('for_storing_tshirts');
             $totalQuantity = $distributions->sum('quantity');
 
             // Add totals row
             $sheet->setCellValue('A' . $row, 'TOTAL');
             $sheet->mergeCells('A' . $row . ':E' . $row);
-            $sheet->setCellValue('F' . $row, $totalForUse);
-            $sheet->setCellValue('G' . $row, $totalForStoring);
-            $sheet->setCellValue('H' . $row, $totalQuantity);
-            $sheet->setCellValue('I' . $row, '');
-            $sheet->setCellValue('J' . $row, '');
+            $sheet->setCellValue('F' . $row, $totalForUseHelmets);
+            $sheet->setCellValue('G' . $row, $totalForUseShirts);
+            $sheet->setCellValue('H' . $row, $totalForStoringHelmets);
+            $sheet->setCellValue('I' . $row, $totalForStoringShirts);
+            $sheet->setCellValue('J' . $row, $totalQuantity);
+            $sheet->setCellValue('K' . $row, '');
+            $sheet->setCellValue('L' . $row, '');
 
             // Style the totals row
-            $sheet->getStyle('A' . $row . ':J' . $row)->applyFromArray([
+            $sheet->getStyle('A' . $row . ':L' . $row)->applyFromArray([
                 'font' => [
                     'bold' => true,
                     'size' => 12
@@ -162,11 +195,11 @@ class ExportController extends Controller
 
             // Center align the TOTAL label and numbers
             $sheet->getStyle('A' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('F' . $row . ':H' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('F' . $row . ':J' . $row)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         }
 
         // Auto-size columns
-        foreach (range('A', 'J') as $column) {
+        foreach (range('A', 'L') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
@@ -180,12 +213,12 @@ class ExportController extends Controller
                 ]
             ]
         ];
-        $sheet->getStyle('A1:J' . $lastDataRow)->applyFromArray($styleArray);
+        $sheet->getStyle('A1:L' . $lastDataRow)->applyFromArray($styleArray);
 
         // Center align numeric columns (No, For Use, For Storing, Total) - excluding totals row
         $lastRegularRow = $distributions->count() > 0 ? $row - 1 : $row - 1;
-        $sheet->getStyle('A2:A' . $lastRegularRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('F2:H' . $lastRegularRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A3:A' . $lastRegularRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('F3:J' . $lastRegularRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         // Generate filename
         $filename = 'distribution_records_' . date('Y-m-d_H-i-s') . '.xlsx';

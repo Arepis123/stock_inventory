@@ -1,20 +1,34 @@
 <flux:main class="p-6">
     <!-- Header -->
-    <div class="flex justify-between items-start mb-6">
-        <div>
-            <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white dark:text-white">Distribution Management</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">View and manage all stock distribution records</p>            
+    <div class="mb-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white dark:text-white">Distribution Management</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">View and manage all stock distribution records</p>
+            </div>
+
+            <!-- Top Right Numbers - Hidden on mobile, visible on desktop -->
+            <div class="hidden sm:flex gap-8">
+                <div class="text-center">
+                    <div class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($this->totalDistributed) }}</div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400">Total Distributed</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-green-600 dark:text-green-400">{{ number_format($this->totalRecords) }}</div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400">Total Records</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Top Right Numbers -->
-        <div class="flex gap-8">
-            <div class="text-center">
-                <div class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($this->totalDistributed) }}</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">Total Distributed</div>
+        <!-- Stats Cards - Visible on mobile, hidden on desktop -->
+        <div class="grid grid-cols-2 gap-4 mt-4 sm:hidden">
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($this->totalDistributed) }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Total Distributed</div>
             </div>
-            <div class="text-center">
-                <div class="text-xl font-bold text-green-600 dark:text-green-400">{{ number_format($this->totalRecords) }}</div>
-                <div class="text-sm text-gray-600 dark:text-gray-400">Total Records</div>
+            <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ number_format($this->totalRecords) }}</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">Total Records</div>
             </div>
         </div>
     </div>
@@ -33,7 +47,7 @@
                 </flux:accordion.heading>
                 <flux:accordion.content>
                     <div class="space-y-4 pt-4 mx-3">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                             <!-- Staff Name Filter -->
                             <flux:field>
                                 <flux:label>Staff Name</flux:label>
@@ -79,7 +93,7 @@
                             <!-- Clear Filters -->
                             <flux:field>
                                 <flux:label>&nbsp;</flux:label>
-                                <flux:button wire:click="clearFilters" variant="filled" class="w-full" size="sm">
+                                <flux:button wire:click="clearFilters" variant="primary" class="w-full" size="sm">
                                     Clear Filters
                                 </flux:button>
                             </flux:field>
@@ -209,7 +223,7 @@
                             <flux:table.cell align="center">
                                 @if($distribution->for_use_stock > 0 || ($distribution->for_use_helmets > 0 || $distribution->for_use_tshirts > 0))
                                     <div class="text-sm">
-                                        <div class="font-medium">{{ number_format($distribution->for_use_stock ?: (($distribution->for_use_helmets ?: 0) + ($distribution->for_use_tshirts ?: 0))) }}</div>
+                                        <div class="font-medium dark:text-white">{{ number_format($distribution->for_use_stock ?: (($distribution->for_use_helmets ?: 0) + ($distribution->for_use_tshirts ?: 0))) }}</div>
                                         @if(($distribution->for_use_helmets ?: 0) > 0 || ($distribution->for_use_tshirts ?: 0) > 0)
                                             <div class="text-xs text-gray-600 dark:text-gray-400 mt-0">
                                                 @if(($distribution->for_use_helmets ?: 0) > 0)<span class="px-1">H:{{ $distribution->for_use_helmets }}</span>@endif

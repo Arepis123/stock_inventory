@@ -71,6 +71,12 @@
             border: 1px solid #ddd;
         }
 
+        table th.sub-header {
+            background-color: #7DBABF;
+            font-size: 10px;
+            padding: 5px 4px;
+        }
+
         table td {
             padding: 6px;
             border: 1px solid #ddd;
@@ -84,6 +90,10 @@
         table td.number {
             text-align: center;
             font-weight: bold;
+        }
+
+        table td.small {
+            font-size: 10px;
         }
 
         table tbody tr:nth-child(even) {
@@ -186,16 +196,22 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 5%;">No</th>
-                <th style="width: 10%;">Date</th>
-                <th style="width: 15%;">Staff Name</th>
-                <th style="width: 12%;">ABM Centre</th>
-                <th style="width: 15%;">Assessment Location</th>
-                <th style="width: 8%;">For Use</th>
-                <th style="width: 8%;">For Storing</th>
-                <th style="width: 8%;">Total</th>
-                <th style="width: 12%;">Remarks</th>
-                <th style="width: 12%;">Created</th>
+                <th rowspan="2" style="width: 4%;">No</th>
+                <th rowspan="2" style="width: 9%;">Date</th>
+                <th rowspan="2" style="width: 13%;">Staff Name</th>
+                <th rowspan="2" style="width: 10%;">ABM Centre</th>
+                <th rowspan="2" style="width: 13%;">Assessment Location</th>
+                <th colspan="2" style="width: 10%;">For Use</th>
+                <th colspan="2" style="width: 10%;">For Storing</th>
+                <th rowspan="2" style="width: 6%;">Total</th>
+                <th rowspan="2" style="width: 12%;">Remarks</th>
+                <th rowspan="2" style="width: 10%;">Created</th>
+            </tr>
+            <tr>
+                <th class="sub-header" style="width: 5%;">Helmet</th>
+                <th class="sub-header" style="width: 5%;">Shirt</th>
+                <th class="sub-header" style="width: 5%;">Helmet</th>
+                <th class="sub-header" style="width: 5%;">Shirt</th>
             </tr>
         </thead>
         <tbody>
@@ -214,16 +230,18 @@
                             {{ $getRegionName($distribution->region) }}
                         </span>
                     </td>
-                    <td>{{ $distribution->warehouse }}</td>
-                    <td class="number">{{ number_format($distribution->for_use_stock) }}</td>
-                    <td class="number">{{ number_format($distribution->for_storing) }}</td>
+                    <td class="small">{{ $distribution->warehouse }}</td>
+                    <td class="number">{{ number_format($distribution->for_use_helmets ?? 0) }}</td>
+                    <td class="number">{{ number_format($distribution->for_use_tshirts ?? 0) }}</td>
+                    <td class="number">{{ number_format($distribution->for_storing_helmets ?? 0) }}</td>
+                    <td class="number">{{ number_format($distribution->for_storing_tshirts ?? 0) }}</td>
                     <td class="number">{{ number_format($distribution->quantity) }}</td>
-                    <td>{{ $distribution->remarks ?: '-' }}</td>
-                    <td class="center">{{ $distribution->created_at->format('d M Y H:i') }}</td>
+                    <td class="small">{{ $distribution->remarks ?: '-' }}</td>
+                    <td class="center small">{{ $distribution->created_at->format('d M Y H:i') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="10" class="center" style="padding: 30px; color: #666;">
+                    <td colspan="12" class="center" style="padding: 30px; color: #666;">
                         No distribution records found with current filters.
                     </td>
                 </tr>
@@ -232,8 +250,10 @@
             <!-- Totals Row -->
             <tr class="totals-row">
                 <td colspan="5" class="center" style="font-weight: bold;">TOTAL</td>
-                <td class="number">{{ number_format($distributions->sum('for_use_stock')) }}</td>
-                <td class="number">{{ number_format($distributions->sum('for_storing')) }}</td>
+                <td class="number">{{ number_format($distributions->sum('for_use_helmets')) }}</td>
+                <td class="number">{{ number_format($distributions->sum('for_use_tshirts')) }}</td>
+                <td class="number">{{ number_format($distributions->sum('for_storing_helmets')) }}</td>
+                <td class="number">{{ number_format($distributions->sum('for_storing_tshirts')) }}</td>
                 <td class="number">{{ number_format($distributions->sum('quantity')) }}</td>
                 <td colspan="2"></td>
             </tr>
