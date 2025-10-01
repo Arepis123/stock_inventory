@@ -201,8 +201,8 @@
                 <th rowspan="2" style="width: 13%;">Staff Name</th>
                 <th rowspan="2" style="width: 10%;">ABM Centre</th>
                 <th rowspan="2" style="width: 13%;">Assessment Location</th>
-                <th colspan="2" style="width: 10%;">For Use</th>
-                <th colspan="2" style="width: 10%;">For Storing</th>
+                <th colspan="2" style="width: 10%;">For Contractor</th>
+                <th colspan="2" style="width: 10%;">For ABM Storing</th>
                 <th rowspan="2" style="width: 6%;">Total</th>
                 <th rowspan="2" style="width: 12%;">Remarks</th>
                 <th rowspan="2" style="width: 10%;">Created</th>

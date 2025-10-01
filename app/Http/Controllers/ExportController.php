@@ -69,21 +69,21 @@ class ExportController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Distribution Records');
 
-        // Set headers with sub-headers for For Use and For Storing
+        // Set headers with sub-headers for For Contractor and For Storing
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Date');
         $sheet->setCellValue('C1', 'Staff Name');
         $sheet->setCellValue('D1', 'ABM Centre');
         $sheet->setCellValue('E1', 'Assessment Location');
-        $sheet->setCellValue('F1', 'For Use');
-        $sheet->setCellValue('H1', 'For Storing');
+        $sheet->setCellValue('F1', 'For Contractor');
+        $sheet->setCellValue('H1', 'For ABM Storing');
         $sheet->setCellValue('J1', 'Total');
         $sheet->setCellValue('K1', 'Remarks');
         $sheet->setCellValue('L1', 'Created At');
 
         // Merge cells for main headers
-        $sheet->mergeCells('F1:G1'); // For Use
-        $sheet->mergeCells('H1:I1'); // For Storing
+        $sheet->mergeCells('F1:G1'); // For Contractor
+        $sheet->mergeCells('H1:I1'); // For ABM Storing
 
         // Set sub-headers in row 2
         $sheet->setCellValue('A2', '');
@@ -138,7 +138,7 @@ class ExportController extends Controller
             $sheet->setCellValue('D' . $row, $regionName);
             $sheet->setCellValue('E' . $row, $distribution->warehouse);
 
-            // For Use columns (Helmet and Shirt)
+            // For Contractor columns (Helmet and Shirt)
             $sheet->setCellValue('F' . $row, $distribution->for_use_helmets ?? 0);
             $sheet->setCellValue('G' . $row, $distribution->for_use_tshirts ?? 0);
 
@@ -215,7 +215,7 @@ class ExportController extends Controller
         ];
         $sheet->getStyle('A1:L' . $lastDataRow)->applyFromArray($styleArray);
 
-        // Center align numeric columns (No, For Use, For Storing, Total) - excluding totals row
+        // Center align numeric columns (No, For Contractor, For ABM Storing, Total) - excluding totals row
         $lastRegularRow = $distributions->count() > 0 ? $row - 1 : $row - 1;
         $sheet->getStyle('A3:A' . $lastRegularRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('F3:J' . $lastRegularRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);

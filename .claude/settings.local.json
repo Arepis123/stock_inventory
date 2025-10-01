@@ -19,7 +19,8 @@
       "Bash(npm --version)",
       "Bash(npm install)",
       "Bash(timeout 5s npm run dev)",
-      "Bash(timeout 3s npm run dev)"
+      "Bash(timeout 3s npm run dev)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

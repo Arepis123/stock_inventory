@@ -1,7 +1,7 @@
 <div class="max-w-4xl mx-auto p-6">
     <flux:card class="space-y-6">
         <div>
-            <flux:heading size="lg">Safety Equipment Distribution Form</flux:heading>
+            <flux:heading size="lg">SKKP Equipment Distribution Form</flux:heading>
             <flux:subheading>Record distribution of safety helmets and t-shirts with flexible stock deduction options</flux:subheading>
         </div>
 
@@ -124,7 +124,7 @@
 
                     <!-- For Storing Section -->
                     <div class="space-y-4 border-t border-blue-200 dark:border-blue-700 pt-4">
-                        <flux:heading size="xs" class="text-blue-600 dark:text-blue-400">For Storing</flux:heading>
+                        <flux:heading size="xs" class="text-blue-600 dark:text-blue-400">For ABM Storing</flux:heading>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <flux:field>
                                 <flux:label>Safety Helmets</flux:label>
@@ -144,7 +144,7 @@
                         <div class="text-xs text-gray-600 dark:text-gray-400 mb-2">Usage Summary:</div>
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                                <span class="font-medium">For Use:</span>
+                                <span class="font-medium">For Contractor:</span>
                                 {{ ($for_use_helmets ?: 0) + ($for_use_tshirts ?: 0) }} items
                                 @if(($for_use_helmets ?: 0) > 0 || ($for_use_tshirts ?: 0) > 0)
                                     <div class="text-xs text-gray-500">
@@ -153,7 +153,7 @@
                                 @endif
                             </div>
                             <div>
-                                <span class="font-medium">For Storing:</span>
+                                <span class="font-medium">For ABM Storing:</span>
                                 {{ ($for_storing_helmets ?: 0) + ($for_storing_tshirts ?: 0) }} items
                                 @if(($for_storing_helmets ?: 0) > 0 || ($for_storing_tshirts ?: 0) > 0)
                                     <div class="text-xs text-gray-500">

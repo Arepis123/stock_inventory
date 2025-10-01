@@ -172,14 +172,14 @@
                         :sorted="$sortBy === 'for_use_stock'"
                         :direction="$sortDirection"
                         wire:click="sort('for_use_stock')"
-                    >For Use</flux:table.column>
+                    >For Contractor</flux:table.column>
                     <flux:table.column
                         align="center"
                         sortable
                         :sorted="$sortBy === 'for_storing'"
                         :direction="$sortDirection"
                         wire:click="sort('for_storing')"
-                    >For Storing</flux:table.column>
+                    >For ABM Storing</flux:table.column>
                     <flux:table.column
                         align="center"
                     >Source</flux:table.column>

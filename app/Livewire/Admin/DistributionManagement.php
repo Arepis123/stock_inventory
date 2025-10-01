@@ -248,8 +248,8 @@ class DistributionManagement extends Component
 <Cell ss:MergeDown="1"><Data ss:Type="String">Staff Name</Data></Cell>
 <Cell ss:MergeDown="1"><Data ss:Type="String">ABM Centre</Data></Cell>
 <Cell ss:MergeDown="1"><Data ss:Type="String">Assessment Location</Data></Cell>
-<Cell ss:MergeAcross="1"><Data ss:Type="String">For Use</Data></Cell>
-<Cell ss:MergeAcross="1"><Data ss:Type="String">For Storing</Data></Cell>
+<Cell ss:MergeAcross="1"><Data ss:Type="String">For Contractor</Data></Cell>
+<Cell ss:MergeAcross="1"><Data ss:Type="String">For ABM Storing</Data></Cell>
 <Cell ss:MergeDown="1"><Data ss:Type="String">Total</Data></Cell>
 <Cell ss:MergeDown="1"><Data ss:Type="String">Remarks</Data></Cell>
 <Cell ss:MergeDown="1"><Data ss:Type="String">Created At</Data></Cell>

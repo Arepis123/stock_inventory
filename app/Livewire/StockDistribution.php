@@ -259,7 +259,7 @@ class StockDistribution extends Component
                 $storeTshirts = $this->for_storing_tshirts ?: 0;
 
                 if ($useHelmets <= 0 && $useTshirts <= 0 && $storeHelmets <= 0 && $storeTshirts <= 0) {
-                    Flux::toast('Invalid Usage', 'Please specify quantities for "For Contractor Use" and/or "For Storing" equipment.');
+                    Flux::toast('Invalid Usage', 'Please specify quantities for "For Contractor Use" and/or "For ABM Storing" equipment.');
                     return;
                 }
             }
